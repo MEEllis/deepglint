@@ -1,0 +1,93 @@
+<template>
+  <el-container class="custom-wrap">
+    <el-main class="custom-main">
+      <!-- 右侧内容区域可以滚动 -->
+      <div class="wrapper">
+        <div class="btn-wrap">
+          <el-button type="primary" @click="handerRefreshDevice()">同步设备</el-button>
+        </div>
+        <el-table :data="tableData" :max-height="customTableMaxHeight" style="width: 100%">
+          <el-table-column type="index" label="序号" width="70px" :index="getIndex" />
+          <el-table-column prop="DeviceName" label="设备名称" width="180"></el-table-column>
+          <el-table-column prop="Comment" label="备注"></el-table-column>
+        </el-table>
+        <pagination :total="Total" :limit.sync="pageParams.Limit" :offset.sync="pageParams.Offset"></pagination>
+      </div>
+    </el-main>
+  </el-container>
+</template>
+
+<script lang="ts">
+import { Component, Mixins, Watch } from "vue-property-decorator";
+import { clound, netposa } from "@/service/index";
+import TableContainer from "@/mixins/tableContainer";
+import MPaginationTable from "@/mixins/mPaginationTable";
+import Pagination from "@/components/pagination/Pagination.vue";
+
+@Component({
+  components: { Pagination }
+})
+export default class Sensor extends Mixins(TableContainer, MPaginationTable) {
+  private tableData: any = [];
+
+  private get customTableMaxHeight() {
+    return this.tableMaxHeight - 32;
+  }
+
+  protected mounted() {
+    this.search();
+  }
+
+  public search() {
+    const { Limit, Offset } = this.pageParams;
+    clound
+      .getDeviceList({
+        Limit,
+        Offset
+      })
+      .then((data: any) => {
+        const { Devices, DeviceCount } = data;
+        this.tableData = Devices;
+        this.Total = DeviceCount;
+      })
+      .catch(() => {
+        this.tableData = [];
+        this.Total = 0;
+      });
+  }
+
+  // 同步设备
+  private handerRefreshDevice() {
+    netposa.setRefreshDevice({
+      PageNum: 1,
+      PageSize: 10000
+    }).then((data:any)=>{
+        this.$message.success(data.msg);
+        this.search();
+    });
+  }
+}
+</script>
+<style lang="scss" scoped>
+.custom-wrap {
+  height: calc(100% - 71px);
+
+  .btn-wrap {
+    display: flex;
+    margin-bottom: 15px;
+  }
+
+  .custom-main {
+    background-color: #fff;
+    padding: 0;
+    .wrapper {
+      // 右侧内容区域可以滚动
+      overflow-y: auto;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      border-radius: 3px;
+    }
+  }
+}
+</style>
