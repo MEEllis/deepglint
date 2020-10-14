@@ -4,14 +4,33 @@
       <!-- 右侧内容区域可以滚动 -->
       <div class="wrapper">
         <div class="btn-wrap">
-          <el-button type="primary" @click="handerRefreshDevice()">同步设备</el-button>
+          <el-button type="primary" @click="handerRefreshDevice()"
+            >同步设备</el-button
+          >
         </div>
-        <el-table :data="tableData" :max-height="customTableMaxHeight" style="width: 100%">
-          <el-table-column type="index" label="序号" width="70px" :index="getIndex" />
-          <el-table-column prop="DeviceName" label="设备名称" width="180"></el-table-column>
+        <el-table
+          :data="tableData"
+          :max-height="customTableMaxHeight"
+          style="width: 100%"
+        >
+          <el-table-column
+            type="index"
+            label="序号"
+            width="70px"
+            :index="getIndex"
+          />
+          <el-table-column
+            prop="DeviceName"
+            label="设备名称"
+            width="180"
+          ></el-table-column>
           <el-table-column prop="Comment" label="备注"></el-table-column>
         </el-table>
-        <pagination :total="Total" :limit.sync="pageParams.Limit" :offset.sync="pageParams.Offset"></pagination>
+        <pagination
+          :total="Total"
+          :limit.sync="pageParams.Limit"
+          :offset.sync="pageParams.Offset"
+        ></pagination>
       </div>
     </el-main>
   </el-container>
@@ -31,7 +50,7 @@ export default class Sensor extends Mixins(TableContainer, MPaginationTable) {
   private tableData: any = [];
 
   private get customTableMaxHeight() {
-    return this.tableMaxHeight - 32;
+    return this.tableMaxHeight - 55 - 32;
   }
 
   protected mounted() {
@@ -48,6 +67,10 @@ export default class Sensor extends Mixins(TableContainer, MPaginationTable) {
       .then((data: any) => {
         const { Devices, DeviceCount } = data;
         this.tableData = Devices;
+        for (let i = 0; i < Devices.length; i++) {
+          let item = Devices[i];
+          console.log(item.DeviceType);
+        }
         this.Total = DeviceCount;
       })
       .catch(() => {
@@ -58,13 +81,15 @@ export default class Sensor extends Mixins(TableContainer, MPaginationTable) {
 
   // 同步设备
   private handerRefreshDevice() {
-    netposa.setRefreshDevice({
-      PageNum: 1,
-      PageSize: 10000
-    }).then((data:any)=>{
+    netposa
+      .setRefreshDevice({
+        PageNum: 1,
+        PageSize: 30000
+      })
+      .then((data: any) => {
         this.$message.success(data.msg);
         this.search();
-    });
+      });
   }
 }
 </script>

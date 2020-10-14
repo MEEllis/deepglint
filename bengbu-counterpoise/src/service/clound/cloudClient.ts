@@ -53,8 +53,16 @@ export default class CloundClient {
   public getRepoList(data: any) {
     return this._post("api/repo/list", { data });
   }
-    //.比对库列表查询
-    public getDeviceTaskList(data: any) {
-      return this._post("api/device/task/list", { data });
-    }
+  //.比对库列表查询
+  public getDeviceTaskList(data: any) {
+    return this._post("api/device/task/list", { data });
+  }
+  //启动、停止、删除分析任务
+  public setDeviceTaskStatus(data: any) {
+    return this._post("api/device/task/update", { data });
+  }
+  //创建分析任务
+  public setDeviceTask(data: any) {
+    return this._post("api/device/task", { data });
+  }
 }

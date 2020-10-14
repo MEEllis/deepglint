@@ -12,9 +12,17 @@
           :data="tableData"
           style="width: 100%"
         >
-          <el-table-column type="index" label="序号" width="70px" :index="getIndex" />
+          <el-table-column
+            type="index"
+            label="序号"
+            width="70px"
+            :index="getIndex"
+          />
           <el-table-column type="expand" width="1">
-            <template slot-scope="props" v-if="props.row.Devices&&props.row.Devices.length > 0">
+            <template
+              slot-scope="props"
+              v-if="props.row.Devices && props.row.Devices.length > 0"
+            >
               <div style="margin-bottom:10px;">设备列表：</div>
               <VirtualList
                 style="height: 260px; overflow-y: auto;background-color: #f6fbfd;"
@@ -22,16 +30,22 @@
                 :data-sources="props.row.Devices"
                 :data-component="itemComponent"
               >
-                <div v-for="(item, index) in props.row.Devices" :key="index">{{ item.DeviceName }}</div>
+                <div v-for="(item, index) in props.row.Devices" :key="index">
+                  {{ item.DeviceName }}
+                </div>
               </VirtualList>
             </template>
           </el-table-column>
-          <el-table-column prop="GroupName" label="组织名称" width="170"></el-table-column>
+          <el-table-column
+            prop="GroupName"
+            label="组织名称"
+            width="170"
+          ></el-table-column>
           <el-table-column label="设备数量" width="170">
             <template slot-scope="props">
-              <span
-                v-if="props.row.Devices&&props.row.Devices.length > 0"
-              >{{props.row.Devices.length }}</span>
+              <span v-if="props.row.Devices && props.row.Devices.length > 0">{{
+                props.row.Devices.length
+              }}</span>
               <span v-else>0</span>
             </template>
           </el-table-column>
@@ -42,7 +56,8 @@
                 :disabled="scope.row.GroupType == 'default'"
                 size="mini"
                 @click="handleEdit(scope.$index, scope.row)"
-              >编辑</el-button>
+                >编辑</el-button
+              >
               <el-button
                 size="mini"
                 type="danger"
@@ -51,13 +66,18 @@
               >删除</el-button>
               <el-button
                 type="text"
-                v-if="scope.row.Devices&&scope.row.Devices.length > 0"
+                v-if="scope.row.Devices && scope.row.Devices.length > 0"
                 @click="toogleExpand(scope.row)"
-              >查看设备信息</el-button>
+                >查看设备信息</el-button
+              >
             </template>
           </el-table-column>
         </el-table>
-        <pagination :total="Total" :limit.sync="pageParams.Limit" :offset.sync="pageParams.Offset"></pagination>
+        <pagination
+          :total="Total"
+          :limit.sync="pageParams.Limit"
+          :offset.sync="pageParams.Offset"
+        ></pagination>
       </div>
     </el-main>
 
@@ -91,6 +111,11 @@ import DeviceItem from "./DeviceItem.vue";
 import TableContainer from "@/mixins/tableContainer";
 import MPaginationTable from "@/mixins/mPaginationTable";
 import Pagination from "@/components/pagination/Pagination.vue";
+const orgDefaultForm = {
+  GroupName: "",
+  GroupID: "",
+  Comment: ""
+};
 
 @Component({
   components: {
@@ -103,14 +128,10 @@ export default class Org extends Mixins(TableContainer, MPaginationTable) {
   private itemComponent = DeviceItem;
 
   private orgDialogVisible = false;
-  private orgForm = {
-    GroupName: "",
-    GroupID: "",
-    Comment: ""
-  };
+  private orgForm = { ...orgDefaultForm };
 
   private get customTableMaxHeight() {
-    return this.tableMaxHeight - 87;
+    return this.tableMaxHeight - 32;
   }
 
   protected mounted() {
@@ -139,11 +160,7 @@ export default class Org extends Mixins(TableContainer, MPaginationTable) {
     this.handerOrgDialogVisible(false);
     this.search();
     this.$message(mes);
-    this.orgForm = {
-      GroupName: "",
-      GroupID: "",
-      Comment: ""
-    };
+    this.orgForm = { ...orgDefaultForm };
   }
 
   private handerOrgDialogVisible(visible: boolean) {

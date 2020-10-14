@@ -53,13 +53,27 @@ Service.interceptors.response.use(
   },
   function(error) {
     loadingInstance.close();
-    // 对响应错误做点什么
-    Message({
-      message: "服务器繁忙",
-      type: "error",
-    });
+    const { response } = error;
+    sendMsg(response);
     return Promise.reject(error);
   }
 );
 
+function sendMsg(response: AxiosResponse) {
+  const { data } = response;
+  const { Code, Msg } = data;
+  // 对响应错误做点什么
+  let msg;
+  if (Code !== undefined) {
+    msg = Msg || "服务君开了小差～";
+  } else {
+    msg = "服务君开了小差～";
+  }
+  Message({
+    message: msg,
+    type: "error",
+    showClose: true,
+    duration: 1500,
+  });
+}
 export default Service;

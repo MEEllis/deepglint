@@ -113,7 +113,7 @@ export default class Repo extends Mixins(TableContainer, MPaginationTable) {
     netposa
       .setrefreshRepo({
         PageNum: 1,
-        PageSize: 10000,
+        PageSize: 30000,
         StartTime: moment(this.refreshRepoTime[0]).format("YYYY-MM-DD HH:mm:ss").valueOf(),
         EndTime: moment(this.refreshRepoTime[1]).format("YYYY-MM-DD HH:mm:ss").valueOf()
       })
