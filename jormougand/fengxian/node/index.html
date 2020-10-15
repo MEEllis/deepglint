@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Document</title>
+</head>
+
+<body>
+  <script>
+    let restream = { "name": "StartStream", "param": { "devicetype": "pvgplus", "user": "gelin", "password": "123456", "ip": "10.232.75.89", "port": 2015, "channel": "b10df9d1-881d-4075-ad7c-e718ac1f2b7d", "title": "立新/周家弄HG", "pvgType": 1, "streamtype": "live", "isptz": true, "keeplastpicture": false, "extdecoder": 7, "fixiframe": false, "_enableAudio": 1 }, "type": "command" };
+    restream = {
+      name: "StartStream",
+      param: {
+        channel: "e1543dac-f214-462f-b612-0f9a5172c36c",
+        devicetype: "pvgplus",
+        extdecoder: 7,
+        fixiframe: false,
+        ip: "10.232.75.91",
+        isptz: true,
+        keeplastpicture: false,
+        password: "123456",
+        port: 2015,
+        pvgType: 2,
+        streamtype: "live",
+        title: "九川千千幼儿园校外全景",
+        user: "gelin",
+        _enableAudio: 1
+      },
+      type: "command"
+    }
+  </script>
+  <script>
+    // var ws = new WebSocket("ws://127.0.0.1:9122");
+    // const aa = JSON.stringify({
+    //   name: "GetCpuMemory",
+    //   param: {},
+    //   type: "command",
+    //   _innerid: "_1",
+    // });
+    // ws.onopen = function (evt) {
+    //   console.log("GetCpuMemory Connection open ...");
+    //   ws.send(aa);
+    // };
+
+    // ws.onmessage = function (evt) {
+    //   console.log(" GetCpuMemory Received Message: " + evt.data);
+    // };
+
+    // ws.onclose = function (evt) {
+    //   console.log("GetCpuMemory Connection closed.");
+    // };
+  </script>
+  <script>
+    var wsStream = new WebSocket("ws://127.0.0.1:9122");
+    wsStream.onopen = function (evt) {
+      console.log("StartStream Connection open ...");
+      wsStream.send(JSON.stringify(restream));
+    };
+
+    wsStream.onmessage = function (evt) {
+      if (typeof event.data === "string") {
+        console.log("Received data string" + evt.data);
+      }
+
+      if (event.data instanceof Blob) {
+        var buffer = event.data;
+        console.log("Received Blob" + evt.data);
+      }
+    };
+
+    wsStream.onclose = function (evt) {
+      console.log("StartStream Connection closed.");
+    };
+  </script>
+</body>
+
+</html>
